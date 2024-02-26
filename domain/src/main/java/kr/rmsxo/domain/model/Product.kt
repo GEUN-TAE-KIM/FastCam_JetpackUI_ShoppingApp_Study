@@ -10,4 +10,5 @@ data class Product(
     val isNew: Boolean,
     val isLike: Boolean,
     val isFreeShipping: Boolean,
-)
+    override val type: ModelType = ModelType.PRODUCT,
+) : BaseModel()
