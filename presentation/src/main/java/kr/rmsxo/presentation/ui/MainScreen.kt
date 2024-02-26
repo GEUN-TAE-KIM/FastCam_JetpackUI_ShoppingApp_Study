@@ -18,16 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kr.rmsxo.presentation.R
+import kr.rmsxo.presentation.ui.main.MainInsideScreen
 import kr.rmsxo.presentation.ui.theme.JetPack_ShoppingMallTheme
 import kr.rmsxo.presentation.viewmodel.MainViewMode
 
@@ -53,7 +51,7 @@ fun MainScreen() {
             MainBottomNavigationBar(navController = navController)
         }
     ) {
-        MainNavigationScreen(navController = navController)
+        MainNavigationScreen(viewMode = viewModel,navController = navController)
     }
 
 }
@@ -114,10 +112,10 @@ fun MainBottomNavigationBar(navController: NavHostController) {
 }
 
 @Composable
-fun MainNavigationScreen(navController: NavHostController) {
+fun MainNavigationScreen(viewMode: MainViewMode, navController: NavHostController) {
     NavHost(navController = navController, startDestination = MainNavigationItem.Main.route) {
         composable(MainNavigationItem.Main.route) {
-            Text(text = "1")
+            MainInsideScreen(viewMode)
         }
         composable(MainNavigationItem.Category.route) {
             Text(text = "2")
