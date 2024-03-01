@@ -9,38 +9,36 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import kr.rmsxo.presentation.ui.main.MainInsideScreen
+import androidx.navigation.navArgument
+import com.google.gson.Gson
+import kr.rmsxo.domain.model.Category
+import kr.rmsxo.presentation.ui.category.CategoryScreen
+import kr.rmsxo.presentation.ui.main.MainCategoryScreen
+import kr.rmsxo.presentation.ui.main.MainHomeScreen
 import kr.rmsxo.presentation.ui.theme.JetPack_ShoppingMallTheme
-import kr.rmsxo.presentation.viewmodel.MainViewMode
-
-sealed class MainNavigationItem(var route: String, val icon : ImageVector, var name: String) {
-    object Main : MainNavigationItem("Main", Icons.Filled.Home ,"Main")
-    object Category : MainNavigationItem("Category", Icons.Filled.Star ,"Category")
-    object MyPage : MainNavigationItem("MyPage", Icons.Filled.AccountBox ,"MyPage")
-}
+import kr.rmsxo.presentation.viewmodel.MainViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
-    val viewModel = hiltViewModel<MainViewMode>()
+    val viewModel = hiltViewModel<MainViewModel>()
     val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
         topBar = {
@@ -48,18 +46,20 @@ fun MainScreen() {
         },
         scaffoldState = scaffoldState,
         bottomBar = {
-            MainBottomNavigationBar(navController = navController)
+            if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
+                MainBottomNavigationBar(navController, currentRoute)
+            }
         }
     ) {
-        MainNavigationScreen(viewMode = viewModel,navController = navController)
+        MainNavigationScreen(viewMode = viewModel, navController = navController)
     }
 
 }
 
 @Composable
-fun Header(viewModel: MainViewMode) {
+fun Header(viewModel: MainViewModel) {
     TopAppBar(
-        title = { Text("My App")},
+        title = { Text("My App") },
         actions = {
             IconButton(onClick = {
                 viewModel.openSearchForm()
@@ -71,32 +71,30 @@ fun Header(viewModel: MainViewMode) {
 }
 
 @Composable
-fun MainBottomNavigationBar(navController: NavHostController) {
+fun MainBottomNavigationBar(navController: NavHostController, currentRoute: String?) {
     val bottomNavigationItems = listOf(
-        MainNavigationItem.Main,
-        MainNavigationItem.Category,
-        MainNavigationItem.MyPage
+        NavigationItem.MainNav.Home,
+        NavigationItem.MainNav.Category,
+        NavigationItem.MainNav.MyPage
     )
     BottomNavigation(
         backgroundColor = Color(0xFFEFB8C8),
         contentColor = Color(0xFFCCC2DC)
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
 
         bottomNavigationItems.forEach { item ->
             BottomNavigationItem(
-                selected = currentRoute == item.route ,
+                selected = currentRoute == item.route,
                 onClick = {
-                          navController.navigate(item.route) {
-                              navController.graph.startDestinationRoute?.let {
-                                  popUpTo(it) {
-                                      saveState = true
-                                  }
-                                  launchSingleTop = true
-                                  restoreState = true
-                              }
-                          }
+                    navController.navigate(item.route) {
+                        navController.graph.startDestinationRoute?.let {
+                            popUpTo(it) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 },
                 icon = {
                     Icon(
@@ -112,39 +110,33 @@ fun MainBottomNavigationBar(navController: NavHostController) {
 }
 
 @Composable
-fun MainNavigationScreen(viewMode: MainViewMode, navController: NavHostController) {
-    NavHost(navController = navController, startDestination = MainNavigationItem.Main.route) {
-        composable(MainNavigationItem.Main.route) {
-            MainInsideScreen(viewMode)
+fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostController) {
+    NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
+        composable(NavigationRouteName.MAIN_HOME) {
+            MainHomeScreen(viewMode)
         }
-        composable(MainNavigationItem.Category.route) {
-            Text(text = "2")
+        composable(NavigationRouteName.MAIN_CATEGORY) {
+            MainCategoryScreen(viewMode, navController)
         }
-        composable(MainNavigationItem.MyPage.route) {
+        composable(NavigationRouteName.MAIN_MY_PAGE) {
             Text(text = "3")
+        }
+        composable(
+            NavigationRouteName.CATEGORY + "{/category}",
+            arguments = listOf(navArgument("category") {
+                type = NavType.StringType
+            })
+        ) {
+            val categoryString = it.arguments?.getString("category")
+            val category =
+                Gson().fromJson(categoryString, Category::class.java)
+            if (category != null) {
+                CategoryScreen(category = category)
+            }
         }
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @Preview(showBackground = true)

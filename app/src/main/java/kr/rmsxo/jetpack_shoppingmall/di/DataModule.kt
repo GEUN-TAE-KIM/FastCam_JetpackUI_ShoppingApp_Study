@@ -4,8 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kr.rmsxo.data.repository.CategoryRepositoryImpl
 import kr.rmsxo.data.repository.MainRepositoryImpl
 import kr.rmsxo.data.repository.TempRepositoryImpl
+import kr.rmsxo.domain.repository.CategoryRepository
 import kr.rmsxo.domain.repository.MainRepository
 import kr.rmsxo.domain.repository.TempRepository
 import javax.inject.Singleton
@@ -21,4 +23,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindMainRepository(mainRepositoryImpl: MainRepositoryImpl) : MainRepository
+
+    @Binds
+    @Singleton
+    fun bindCategoryRepository(categoryRepositoryImpl: CategoryRepositoryImpl) : CategoryRepository
 }

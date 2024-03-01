@@ -10,12 +10,12 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import kr.rmsxo.presentation.ui.theme.JetPack_ShoppingMallTheme
-import kr.rmsxo.presentation.viewmodel.MainViewMode
+import kr.rmsxo.presentation.viewmodel.MainViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel : MainViewMode by viewModels()
+    private val viewModel : MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
