@@ -12,6 +12,11 @@ import kr.rmsxo.domain.model.Carousel
 import kr.rmsxo.domain.model.ModelType
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.model.Ranking
+import kr.rmsxo.presentation.model.BannerListVM
+import kr.rmsxo.presentation.model.BannerVM
+import kr.rmsxo.presentation.model.CarouselVM
+import kr.rmsxo.presentation.model.ProductVM
+import kr.rmsxo.presentation.model.RankingVM
 import kr.rmsxo.presentation.ui.component.BannerCard
 import kr.rmsxo.presentation.ui.component.BannerListCard
 import kr.rmsxo.presentation.ui.component.CarouselCard
@@ -29,29 +34,15 @@ fun MainHomeScreen(viewModel: MainViewModel) {
     {
         items(modelList.size, span = { index ->
             val item = modelList[index]
-            val spanCount = getSpanCountByType(item.type, columnCount)
+            val spanCount = getSpanCountByType(item.model.type, columnCount)
             GridItemSpan(spanCount)
         }) {
             when (val item = modelList[it]) {
-                is Banner -> BannerCard(model = item) { model ->
-                    viewModel.openBanner(model)
-                }
-
-                is BannerList -> BannerListCard(model = item) { model ->
-                    viewModel.openBannerList(model)
-                }
-
-                is Product -> ProductCard(product = item) { model ->
-                    viewModel.openProduct(model)
-                }
-
-                is Carousel -> CarouselCard(model = item) { model ->
-                    viewModel.openCarouselProduct(model)
-                }
-
-                is Ranking -> RankingCard(model = item) { model ->
-                    viewModel.openRankingProduct(model)
-                }
+                is BannerVM -> BannerCard(presentationVM = item)
+                is BannerListVM -> BannerListCard(presentationVM = item)
+                is ProductVM -> ProductCard(presentationVM = item)
+                is CarouselVM -> CarouselCard(presentationVM = item)
+                is RankingVM -> RankingCard(presentationVM = item)
             }
         }
     }

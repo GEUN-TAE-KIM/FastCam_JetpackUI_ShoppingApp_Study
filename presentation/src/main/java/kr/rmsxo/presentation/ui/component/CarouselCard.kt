@@ -29,9 +29,11 @@ import androidx.compose.ui.unit.sp
 import kr.rmsxo.domain.model.Carousel
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.presentation.R
+import kr.rmsxo.presentation.model.CarouselVM
+import kr.rmsxo.presentation.model.PresentationVM
 
 @Composable
-fun CarouselCard(model: Carousel, onClick: (Product) -> Unit) {
+fun CarouselCard(presentationVM: CarouselVM) {
 
     val scrollState = rememberLazyListState()
 
@@ -39,7 +41,7 @@ fun CarouselCard(model: Carousel, onClick: (Product) -> Unit) {
         Text(
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            text = model.title,
+            text = presentationVM.model.title,
             modifier = Modifier.padding(10.dp)
         )
 
@@ -49,8 +51,10 @@ fun CarouselCard(model: Carousel, onClick: (Product) -> Unit) {
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            items(model.productList.size) {
-                CarouselProductCard(product = model.productList[it],onClick)
+            items(presentationVM.model.productList.size) {
+                CarouselProductCard(product = presentationVM.model.productList[it]) {
+                    presentationVM.openCarouselProduct(it)
+                }
             }
         }
     }

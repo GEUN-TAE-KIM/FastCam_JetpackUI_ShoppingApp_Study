@@ -1,6 +1,6 @@
 package kr.rmsxo.domain.model
 
-abstract class BaseModel {
+sealed class BaseModel {
     abstract val type : ModelType
 }
 

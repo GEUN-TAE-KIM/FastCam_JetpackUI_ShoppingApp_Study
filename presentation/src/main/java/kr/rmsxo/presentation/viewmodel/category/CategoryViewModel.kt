@@ -7,24 +7,31 @@ import kotlinx.coroutines.flow.collectLatest
 import kr.rmsxo.domain.model.Category
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.usecase.CategoryUseCase
+import kr.rmsxo.presentation.delegate.ProductDelegate
+import kr.rmsxo.presentation.model.ProductVM
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val useCase: CategoryUseCase
-): ViewModel() {
+) : ViewModel(), ProductDelegate {
 
-    private val _products = MutableStateFlow<List<Product>>(listOf())
-    val products = MutableStateFlow<List<Product>>(listOf())
-
+    private val _products = MutableStateFlow<List<ProductVM>>(listOf())
+    val products = MutableStateFlow<List<ProductVM>>(listOf())
 
     suspend fun updateCategory(category: Category) {
         useCase.getProductsByCategory(category).collectLatest {
-            products.emit(it)
+            products.emit(convertToPresentationVM(it))
         }
     }
 
-    fun openProduct(product: Product) {
+    override fun openProduct(product: Product) {
 
+    }
+
+    private fun convertToPresentationVM(list: List<Product>): List<ProductVM> {
+        return list.map {
+            ProductVM(it, this)
+        }
     }
 }

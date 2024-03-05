@@ -1,29 +1,47 @@
 package kr.rmsxo.presentation.viewmodel
 
+import android.app.Presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kr.rmsxo.domain.model.Banner
 import kr.rmsxo.domain.model.BannerList
+import kr.rmsxo.domain.model.BaseModel
+import kr.rmsxo.domain.model.Carousel
 import kr.rmsxo.domain.model.Category
+import kr.rmsxo.domain.model.ModelType
 import kr.rmsxo.domain.model.Product
+import kr.rmsxo.domain.model.Ranking
 import kr.rmsxo.domain.usecase.CategoryUseCase
 import kr.rmsxo.domain.usecase.MainUseCase
+import kr.rmsxo.presentation.delegate.BannerDelegate
+import kr.rmsxo.presentation.delegate.CategoryDelegate
+import kr.rmsxo.presentation.delegate.ProductDelegate
+import kr.rmsxo.presentation.model.BannerListVM
+import kr.rmsxo.presentation.model.BannerVM
+import kr.rmsxo.presentation.model.CarouselVM
+import kr.rmsxo.presentation.model.PresentationVM
+import kr.rmsxo.presentation.model.ProductVM
+import kr.rmsxo.presentation.model.RankingVM
 import kr.rmsxo.presentation.ui.NavigationRouteName
 import kr.rmsxo.presentation.ui.utils.NavigationUtils
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(mainUseCase: MainUseCase, categoryUseCase: CategoryUseCase) : ViewModel() {
+class MainViewModel @Inject constructor(
+    mainUseCase: MainUseCase,
+    categoryUseCase: CategoryUseCase
+) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
 
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
     val columnCount: StateFlow<Int> = _columnCount
 
-    val modelList = mainUseCase.getModelList()
+    val modelList = mainUseCase.getModelList().map(::convertToPresentationVM)
     val categories = categoryUseCase.getCategories()
 
     fun openSearchForm() {
@@ -36,31 +54,29 @@ class MainViewModel @Inject constructor(mainUseCase: MainUseCase, categoryUseCas
         }
     }
 
-    fun openProduct(product: Product) {
+    override fun openProduct(product: Product) {
 
     }
 
-    fun openCarouselProduct(carousel: Product) {
+    override fun openBanner(bannerId: String) {
 
     }
 
-    fun openRankingProduct(ranking: Product) {
-
-    }
-
-    fun openBanner(banner: Banner) {
-
-    }
-
-    fun openBannerList(bannerList: BannerList) {
-
-    }
-
-    fun openCategory(navHostController: NavHostController, category: Category) {
+    override fun openCategory(navHostController: NavHostController, category: Category) {
         NavigationUtils.navigation(navHostController, NavigationRouteName.CATEGORY, category)
-
     }
 
+    private fun convertToPresentationVM(list: List<BaseModel>): List<PresentationVM<out BaseModel>> {
+        return list.map { model ->
+            when (model) {
+                is Product -> ProductVM(model, this)
+                is Ranking -> RankingVM(model, this)
+                is Carousel -> CarouselVM(model, this)
+                is Banner -> BannerVM(model, this)
+                is BannerList -> BannerListVM(model, this)
+            }
+        }
+    }
 
 
     companion object {

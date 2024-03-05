@@ -31,10 +31,13 @@ import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.model.SalesStatus
 import kr.rmsxo.domain.model.Shop
 import kr.rmsxo.presentation.R
+import kr.rmsxo.presentation.delegate.ProductDelegate
+import kr.rmsxo.presentation.model.PresentationVM
+import kr.rmsxo.presentation.model.ProductVM
 import kr.rmsxo.presentation.ui.theme.Purple200
 
 @Composable
-fun ProductCard(product: Product, onClick: (Product) -> Unit?) {
+fun ProductCard(presentationVM: ProductVM) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -56,18 +59,18 @@ fun ProductCard(product: Product, onClick: (Product) -> Unit?) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f,)
+                    .aspectRatio(1f)
             )
             Text(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = product.shop.shopName
+                text = presentationVM.model.shop.shopName
             )
             Text(
                 fontSize = 14.sp,
-                text = product.shop.shopName
+                text = presentationVM.model.shop.shopName
             )
-            Price(product)
+            Price(presentationVM.model)
         }
     }
 }
@@ -113,8 +116,8 @@ fun Price(product: Product) {
 @Preview
 @Composable
 private fun PreviewProductCard() {
-    ProductCard(
-        product = Product(
+    ProductCard(ProductVM(
+        model = Product(
             "1",
             "상품이름",
             "",
@@ -132,38 +135,43 @@ private fun PreviewProductCard() {
             isNew = false,
             isLike = false,
             isFreeShipping = false
-        )
-    ) {
-
-    }
+        ),
+        object : ProductDelegate {
+            override fun openProduct(product: Product) {}
+        }
+    )
+    )
 }
 
 @Preview
 @Composable
 private fun PreviewProductCardDiscount() {
     ProductCard(
-        product = Product(
-            "1",
-            "상품이름",
-            "",
-            Price(
-                30000,
-                30000,
-                SalesStatus.ON_DISCOUNT
-            ),
-            Category.Top,
-            Shop(
+        ProductVM(
+            model = Product(
                 "1",
-                "샵 이름",
-                ""
+                "상품이름",
+                "",
+                Price(
+                    30000,
+                    20000,
+                    SalesStatus.ON_DISCOUNT
+                ),
+                Category.Top,
+                Shop(
+                    "1",
+                    "샵 이름",
+                    ""
+                ),
+                isNew = false,
+                isLike = false,
+                isFreeShipping = false
             ),
-            isNew = false,
-            isLike = false,
-            isFreeShipping = false
+            object : ProductDelegate {
+                override fun openProduct(product: Product) {}
+            }
         )
-    ) {
-
-    }
+    )
 }
 
 
@@ -171,27 +179,30 @@ private fun PreviewProductCardDiscount() {
 @Composable
 private fun PreviewProductCardSoldOut() {
     ProductCard(
-        product = Product(
-            "1",
-            "상품이름",
-            "",
-            Price(
-                30000,
-                30000,
-                SalesStatus.SOLD_OUT
-            ),
-            Category.Top,
-            Shop(
+        ProductVM(
+            model = Product(
                 "1",
-                "샵 이름",
-                ""
+                "상품이름",
+                "",
+                Price(
+                    30000,
+                    30000,
+                    SalesStatus.SOLD_OUT
+                ),
+                Category.Top,
+                Shop(
+                    "1",
+                    "샵 이름",
+                    ""
+                ),
+                isNew = false,
+                isLike = false,
+                isFreeShipping = false
             ),
-            isNew = false,
-            isLike = false,
-            isFreeShipping = false
+            object : ProductDelegate {
+                override fun openProduct(product: Product) {}
+            }
         )
-    ) {
-
-    }
+    )
 }
 
