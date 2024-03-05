@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kr.rmsxo.domain.model.Category
 import kr.rmsxo.domain.model.Price
 import kr.rmsxo.domain.model.Product
@@ -32,19 +35,20 @@ import kr.rmsxo.domain.model.SalesStatus
 import kr.rmsxo.domain.model.Shop
 import kr.rmsxo.presentation.R
 import kr.rmsxo.presentation.delegate.ProductDelegate
-import kr.rmsxo.presentation.model.PresentationVM
 import kr.rmsxo.presentation.model.ProductVM
 import kr.rmsxo.presentation.ui.theme.Purple200
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProductCard(presentationVM: ProductVM) {
+fun ProductCard(navHostController: NavHostController, presentationVM: ProductVM) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .height(intrinsicSize = IntrinsicSize.Max)
             .padding(10.dp)
-            .shadow(elevation = 10.dp)
+            .shadow(elevation = 10.dp),
+        onClick = { presentationVM.openProduct(navHostController, presentationVM.model) }
     ) {
         Column(
             modifier = Modifier
@@ -116,30 +120,32 @@ fun Price(product: Product) {
 @Preview
 @Composable
 private fun PreviewProductCard() {
-    ProductCard(ProductVM(
-        model = Product(
-            "1",
-            "상품이름",
-            "",
-            Price(
-                30000,
-                30000,
-                SalesStatus.ON_SALE
-            ),
-            Category.Top,
-            Shop(
+    ProductCard(
+        rememberNavController(),
+        ProductVM(
+            model = Product(
                 "1",
-                "샵 이름",
-                ""
+                "상품이름",
+                "",
+                Price(
+                    30000,
+                    30000,
+                    SalesStatus.ON_SALE
+                ),
+                Category.Top,
+                Shop(
+                    "1",
+                    "샵 이름",
+                    ""
+                ),
+                isNew = false,
+                isLike = false,
+                isFreeShipping = false
             ),
-            isNew = false,
-            isLike = false,
-            isFreeShipping = false
-        ),
-        object : ProductDelegate {
-            override fun openProduct(product: Product) {}
-        }
-    )
+            object : ProductDelegate {
+                override fun openProduct(navHostController: NavHostController, product: Product) {}
+            }
+        )
     )
 }
 
@@ -147,6 +153,7 @@ private fun PreviewProductCard() {
 @Composable
 private fun PreviewProductCardDiscount() {
     ProductCard(
+        rememberNavController(),
         ProductVM(
             model = Product(
                 "1",
@@ -168,7 +175,9 @@ private fun PreviewProductCardDiscount() {
                 isFreeShipping = false
             ),
             object : ProductDelegate {
-                override fun openProduct(product: Product) {}
+                override fun openProduct(navHostController: NavHostController, product: Product) {
+                    TODO("Not yet implemented")
+                }
             }
         )
     )
@@ -179,6 +188,7 @@ private fun PreviewProductCardDiscount() {
 @Composable
 private fun PreviewProductCardSoldOut() {
     ProductCard(
+        rememberNavController(),
         ProductVM(
             model = Product(
                 "1",
@@ -200,7 +210,9 @@ private fun PreviewProductCardSoldOut() {
                 isFreeShipping = false
             ),
             object : ProductDelegate {
-                override fun openProduct(product: Product) {}
+                override fun openProduct(navHostController: NavHostController, product: Product) {
+                    TODO("Not yet implemented")
+                }
             }
         )
     )

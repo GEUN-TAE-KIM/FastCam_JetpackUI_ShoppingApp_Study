@@ -25,9 +25,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
 import kr.rmsxo.domain.model.Category
+import kr.rmsxo.domain.model.Product
 import kr.rmsxo.presentation.ui.category.CategoryScreen
 import kr.rmsxo.presentation.ui.main.MainCategoryScreen
 import kr.rmsxo.presentation.ui.main.MainHomeScreen
+import kr.rmsxo.presentation.ui.product_detail.ProductDetailScreen
 import kr.rmsxo.presentation.ui.theme.JetPack_ShoppingMallTheme
 import kr.rmsxo.presentation.viewmodel.MainViewModel
 
@@ -113,7 +115,7 @@ fun MainBottomNavigationBar(navController: NavHostController, currentRoute: Stri
 fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
         composable(NavigationRouteName.MAIN_HOME) {
-            MainHomeScreen(viewMode)
+            MainHomeScreen(navController, viewMode)
         }
         composable(NavigationRouteName.MAIN_CATEGORY) {
             MainCategoryScreen(viewMode, navController)
@@ -131,8 +133,20 @@ fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostControll
             val category =
                 Gson().fromJson(categoryString, Category::class.java)
             if (category != null) {
-                CategoryScreen(category = category)
+                CategoryScreen(navHostController = navController, category = category)
             }
+        }
+
+        composable(
+            NavigationRouteName.PRODUCT_DETAIL + "/{product}",
+            arguments = (listOf(navArgument("product") { type = NavType.StringType }))
+        ) {
+            val productString = it.arguments?.getString("product")
+            
+            if (productString != null) {
+                ProductDetailScreen(productString)
+            }
+
         }
 
     }
