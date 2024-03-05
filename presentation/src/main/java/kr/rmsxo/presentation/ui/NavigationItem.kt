@@ -6,10 +6,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import kr.rmsxo.domain.model.Category
+import kr.rmsxo.domain.model.Product
 import kr.rmsxo.presentation.ui.NavigationRouteName.CATEGORY
 import kr.rmsxo.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import kr.rmsxo.presentation.ui.NavigationRouteName.MAIN_HOME
 import kr.rmsxo.presentation.ui.NavigationRouteName.MAIN_MY_PAGE
+import kr.rmsxo.presentation.ui.NavigationRouteName.PRODUCT_DETAIL
 
 sealed class NavigationItem(open val route: String) {
     sealed class MainNav(
@@ -33,6 +35,8 @@ sealed class NavigationItem(open val route: String) {
 
     }
     data class CategoryNav(val category: Category) : NavigationItem(CATEGORY)
+
+    data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
 }
 
 object NavigationRouteName {

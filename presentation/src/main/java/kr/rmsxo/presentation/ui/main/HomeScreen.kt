@@ -6,12 +6,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import kr.rmsxo.domain.model.Banner
-import kr.rmsxo.domain.model.BannerList
-import kr.rmsxo.domain.model.Carousel
+import androidx.navigation.NavHostController
 import kr.rmsxo.domain.model.ModelType
-import kr.rmsxo.domain.model.Product
-import kr.rmsxo.domain.model.Ranking
 import kr.rmsxo.presentation.model.BannerListVM
 import kr.rmsxo.presentation.model.BannerVM
 import kr.rmsxo.presentation.model.CarouselVM
@@ -25,7 +21,7 @@ import kr.rmsxo.presentation.ui.component.RankingCard
 import kr.rmsxo.presentation.viewmodel.MainViewModel
 
 @Composable
-fun MainHomeScreen(viewModel: MainViewModel) {
+fun MainHomeScreen(navHostController: NavHostController, viewModel: MainViewModel) {
 
     val modelList by viewModel.modelList.collectAsState(initial = listOf())
     val columnCount by viewModel.columnCount.collectAsState()
@@ -40,9 +36,9 @@ fun MainHomeScreen(viewModel: MainViewModel) {
             when (val item = modelList[it]) {
                 is BannerVM -> BannerCard(presentationVM = item)
                 is BannerListVM -> BannerListCard(presentationVM = item)
-                is ProductVM -> ProductCard(presentationVM = item)
-                is CarouselVM -> CarouselCard(presentationVM = item)
-                is RankingVM -> RankingCard(presentationVM = item)
+                is ProductVM -> ProductCard(navHostController, presentationVM = item)
+                is CarouselVM -> CarouselCard(navHostController, presentationVM = item)
+                is RankingVM -> RankingCard(navHostController, presentationVM = item)
             }
         }
     }
