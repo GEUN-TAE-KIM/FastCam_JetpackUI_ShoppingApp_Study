@@ -2,12 +2,15 @@ package kr.rmsxo.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import kr.rmsxo.data.db.converter.BasketConverter
 import kr.rmsxo.domain.model.Category
 import kr.rmsxo.domain.model.Price
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.model.Shop
 
 @Entity(tableName = "basket")
+@TypeConverters(BasketConverter::class)
 data class BasketProductEntity(
     @PrimaryKey
     val productId: String,

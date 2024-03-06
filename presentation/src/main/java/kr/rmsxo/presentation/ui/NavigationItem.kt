@@ -12,6 +12,7 @@ import kr.rmsxo.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import kr.rmsxo.presentation.ui.NavigationRouteName.MAIN_HOME
 import kr.rmsxo.presentation.ui.NavigationRouteName.MAIN_MY_PAGE
 import kr.rmsxo.presentation.ui.NavigationRouteName.PRODUCT_DETAIL
+import kr.rmsxo.presentation.ui.NavigationRouteName.SEARCH
 
 sealed class NavigationItem(open val route: String) {
     sealed class MainNav(
@@ -34,9 +35,12 @@ sealed class NavigationItem(open val route: String) {
         }
 
     }
+
     data class CategoryNav(val category: Category) : NavigationItem(CATEGORY)
 
     data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
+
+    object SearchNav : NavigationItem(SEARCH)
 }
 
 object NavigationRouteName {

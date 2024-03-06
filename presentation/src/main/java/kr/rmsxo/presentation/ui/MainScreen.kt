@@ -25,11 +25,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
 import kr.rmsxo.domain.model.Category
-import kr.rmsxo.domain.model.Product
 import kr.rmsxo.presentation.ui.category.CategoryScreen
 import kr.rmsxo.presentation.ui.main.MainCategoryScreen
 import kr.rmsxo.presentation.ui.main.MainHomeScreen
 import kr.rmsxo.presentation.ui.product_detail.ProductDetailScreen
+import kr.rmsxo.presentation.ui.search.SearchScreen
 import kr.rmsxo.presentation.ui.theme.JetPack_ShoppingMallTheme
 import kr.rmsxo.presentation.viewmodel.MainViewModel
 
@@ -44,7 +44,9 @@ fun MainScreen() {
 
     Scaffold(
         topBar = {
-            Header(viewModel)
+           if(NavigationItem.MainNav.isMainRoute(currentRoute)) {
+               MainHeader(viewModel, navController)
+           }
         },
         scaffoldState = scaffoldState,
         bottomBar = {
@@ -59,12 +61,12 @@ fun MainScreen() {
 }
 
 @Composable
-fun Header(viewModel: MainViewModel) {
+fun MainHeader(viewModel: MainViewModel, navController: NavHostController) {
     TopAppBar(
         title = { Text("My App") },
         actions = {
             IconButton(onClick = {
-                viewModel.openSearchForm()
+                viewModel.openSearchForm(navController)
             }) {
                 Icon(Icons.Filled.Search, "SearchIcon")
             }
@@ -142,11 +144,14 @@ fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostControll
             arguments = (listOf(navArgument("product") { type = NavType.StringType }))
         ) {
             val productString = it.arguments?.getString("product")
-            
+
             if (productString != null) {
                 ProductDetailScreen(productString)
             }
+        }
 
+        composable(NavigationRouteName.SEARCH) {
+            SearchScreen(navController)
         }
 
     }
