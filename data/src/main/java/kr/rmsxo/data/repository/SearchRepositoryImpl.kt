@@ -9,6 +9,7 @@ import kr.rmsxo.data.db.dao.SearchDao
 import kr.rmsxo.data.db.entity.SearchKeywordEntity
 import kr.rmsxo.data.db.entity.toDomain
 import kr.rmsxo.domain.model.Product
+import kr.rmsxo.domain.model.SearchFilter
 import kr.rmsxo.domain.model.SearchKeyword
 import kr.rmsxo.domain.repository.SearchRepository
 import javax.inject.Inject
@@ -19,12 +20,20 @@ class SearchRepositoryImpl @Inject constructor(
     //  private val likeDao: LikeDao,
 ) : SearchRepository {
 
-    override suspend fun search(searchKeyword: SearchKeyword): Flow<List<Product>> {
+    override suspend fun search(searchKeyword: SearchKeyword, filters: List<SearchFilter>): Flow<List<Product>> {
         searchDao.insert(SearchKeywordEntity(searchKeyword.keyword))
         return dataSource.getProducts().map { list ->
-            list.filter { it.productName.contains(searchKeyword.keyword) }
+            list.filter { isAvailableProduct(it, searchKeyword, filters) }
         }
     }
+
+    private fun isAvailableProduct(product: Product, searchKeyword: SearchKeyword, filters: List<SearchFilter>): Boolean {
+        var isAvailable = true
+        filters.forEach { isAvailable = isAvailable && it.isAvailableProduct(product) }
+
+        return isAvailable && product.productName.contains(searchKeyword.keyword)
+    }
+
 
     override fun getSearchKeywords(): Flow<List<SearchKeyword>> {
         return searchDao.getAll().map { it.map { entity -> entity.toDomain() } }
