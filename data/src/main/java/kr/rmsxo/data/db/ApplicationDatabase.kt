@@ -5,16 +5,18 @@ import androidx.room.RoomDatabase
 import kr.rmsxo.data.db.dao.BasketDao
 import kr.rmsxo.data.db.dao.LikeDao
 import kr.rmsxo.data.db.dao.PurchaseDao
+import kr.rmsxo.data.db.dao.SearchDao
 import kr.rmsxo.data.db.entity.BasketProductEntity
 import kr.rmsxo.data.db.entity.LikeProductEntity
 import kr.rmsxo.data.db.entity.PurchaseProductEntity
+import kr.rmsxo.data.db.entity.SearchKeywordEntity
 
 @Database(
     entities = [
         PurchaseProductEntity::class,
         LikeProductEntity::class,
         BasketProductEntity::class,
-      //  SearchKeywordEntity::class,
+        SearchKeywordEntity::class,
       //  PurchaseHistoryEntity::class,
     ],
     version = 3
@@ -30,7 +32,7 @@ abstract class ApplicationDatabase : RoomDatabase() {
 
     abstract fun basketDao() : BasketDao
 
-   // abstract fun searchDao() : SearchDao
+    abstract fun searchDao() : SearchDao
 
    // abstract fun purchaseHistoryDao() : PurchaseHistoryDao
 }
