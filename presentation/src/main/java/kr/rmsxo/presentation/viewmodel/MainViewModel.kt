@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kr.rmsxo.domain.model.AccountInfo
 import kr.rmsxo.domain.model.Banner
 import kr.rmsxo.domain.model.BannerList
 import kr.rmsxo.domain.model.BaseModel
@@ -17,6 +18,7 @@ import kr.rmsxo.domain.model.Category
 import kr.rmsxo.domain.model.ModelType
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.model.Ranking
+import kr.rmsxo.domain.usecase.AccountUseCase
 import kr.rmsxo.domain.usecase.CategoryUseCase
 import kr.rmsxo.domain.usecase.MainUseCase
 import kr.rmsxo.presentation.delegate.BannerDelegate
@@ -35,7 +37,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     mainUseCase: MainUseCase,
-    categoryUseCase: CategoryUseCase
+    categoryUseCase: CategoryUseCase,
+    private val accountUseCase: AccountUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
 
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
@@ -44,9 +47,23 @@ class MainViewModel @Inject constructor(
     val modelList = mainUseCase.getModelList().map(::convertToPresentationVM)
     val categories = categoryUseCase.getCategories()
 
+    val accountInfo = accountUseCase.getAccountInfo()
+
     fun openSearchForm(navHostController: NavHostController) {
         NavigationUtils.navigation(navHostController, NavigationRouteName.SEARCH)
 
+    }
+
+    fun signInGoogle(accountInfo: AccountInfo) {
+        viewModelScope.launch {
+            accountUseCase.signIn(accountInfo)
+        }
+    }
+
+    fun signOutGoogle() {
+        viewModelScope.launch {
+            accountUseCase.signOut()
+        }
     }
 
     fun updateColumnCount(count: Int) {

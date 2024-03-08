@@ -23,11 +23,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.gson.Gson
 import kr.rmsxo.domain.model.Category
 import kr.rmsxo.presentation.ui.category.CategoryScreen
 import kr.rmsxo.presentation.ui.main.MainCategoryScreen
 import kr.rmsxo.presentation.ui.main.MainHomeScreen
+import kr.rmsxo.presentation.ui.main.MyPageScreen
 import kr.rmsxo.presentation.ui.product_detail.ProductDetailScreen
 import kr.rmsxo.presentation.ui.search.SearchScreen
 import kr.rmsxo.presentation.ui.theme.JetPack_ShoppingMallTheme
@@ -35,7 +37,7 @@ import kr.rmsxo.presentation.viewmodel.MainViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen() {
+fun MainScreen(googleSignInClient: GoogleSignInClient) {
     val viewModel = hiltViewModel<MainViewModel>()
     val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
@@ -55,7 +57,7 @@ fun MainScreen() {
             }
         }
     ) {
-        MainNavigationScreen(viewMode = viewModel, navController = navController)
+        MainNavigationScreen(viewMode = viewModel, navController = navController, googleSignInClient)
     }
 
 }
@@ -114,7 +116,7 @@ fun MainBottomNavigationBar(navController: NavHostController, currentRoute: Stri
 }
 
 @Composable
-fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostController) {
+fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostController, googleSignInClient: GoogleSignInClient) {
     NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
         composable(NavigationRouteName.MAIN_HOME) {
             MainHomeScreen(navController, viewMode)
@@ -123,7 +125,7 @@ fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostControll
             MainCategoryScreen(viewMode, navController)
         }
         composable(NavigationRouteName.MAIN_MY_PAGE) {
-            Text(text = "3")
+            MyPageScreen(viewModel = viewMode, googleSignInClient = googleSignInClient)
         }
         composable(
             NavigationRouteName.CATEGORY + "{/category}",
@@ -154,14 +156,5 @@ fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostControll
             SearchScreen(navController)
         }
 
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    JetPack_ShoppingMallTheme {
-        MainScreen()
     }
 }
