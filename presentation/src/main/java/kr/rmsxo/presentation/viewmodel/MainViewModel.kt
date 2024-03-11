@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    mainUseCase: MainUseCase,
+    private val mainUseCase: MainUseCase,
     categoryUseCase: CategoryUseCase,
     private val accountUseCase: AccountUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
@@ -69,6 +69,12 @@ class MainViewModel @Inject constructor(
     fun updateColumnCount(count: Int) {
         viewModelScope.launch {
             _columnCount.emit(count)
+        }
+    }
+
+    override fun likeProduct(product: Product) {
+        viewModelScope.launch {
+            mainUseCase.likeProduct(product)
         }
     }
 
