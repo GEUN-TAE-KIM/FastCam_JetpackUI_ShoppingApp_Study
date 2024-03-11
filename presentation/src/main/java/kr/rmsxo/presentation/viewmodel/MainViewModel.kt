@@ -20,6 +20,7 @@ import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.model.Ranking
 import kr.rmsxo.domain.usecase.AccountUseCase
 import kr.rmsxo.domain.usecase.CategoryUseCase
+import kr.rmsxo.domain.usecase.LikeUseCase
 import kr.rmsxo.domain.usecase.MainUseCase
 import kr.rmsxo.presentation.delegate.BannerDelegate
 import kr.rmsxo.presentation.delegate.CategoryDelegate
@@ -38,7 +39,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val mainUseCase: MainUseCase,
     categoryUseCase: CategoryUseCase,
-    private val accountUseCase: AccountUseCase
+    private val accountUseCase: AccountUseCase,
+    likeUseCase: LikeUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
 
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
@@ -48,6 +50,8 @@ class MainViewModel @Inject constructor(
     val categories = categoryUseCase.getCategories()
 
     val accountInfo = accountUseCase.getAccountInfo()
+
+    val likeProducts = likeUseCase.getLikeProduct().map(::convertToPresentationVM)
 
     fun openSearchForm(navHostController: NavHostController) {
         NavigationUtils.navigation(navHostController, NavigationRouteName.SEARCH)

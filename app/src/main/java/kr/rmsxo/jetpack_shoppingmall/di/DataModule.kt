@@ -6,12 +6,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kr.rmsxo.data.repository.AccountRepositoryImpl
 import kr.rmsxo.data.repository.CategoryRepositoryImpl
+import kr.rmsxo.data.repository.LikeRepositoryImpl
 import kr.rmsxo.data.repository.MainRepositoryImpl
 import kr.rmsxo.data.repository.ProductDetailRepositoryImpl
 import kr.rmsxo.data.repository.SearchRepositoryImpl
 import kr.rmsxo.data.repository.TempRepositoryImpl
 import kr.rmsxo.domain.repository.AccountRepository
 import kr.rmsxo.domain.repository.CategoryRepository
+import kr.rmsxo.domain.repository.LikeRepository
 import kr.rmsxo.domain.repository.MainRepository
 import kr.rmsxo.domain.repository.ProductDetailRepository
 import kr.rmsxo.domain.repository.SearchRepository
@@ -45,4 +47,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindAccountRepository(accountRepositoryImpl: AccountRepositoryImpl): AccountRepository
+
+    @Binds
+    @Singleton
+    fun bindLikeRepository(likeRepositoryImpl: LikeRepositoryImpl): LikeRepository
 }
