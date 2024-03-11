@@ -11,7 +11,7 @@ import kr.rmsxo.domain.model.Shop
 
 @Entity(tableName = "like")
 @TypeConverters(LikeConverter::class)
-data class LikeProductEntity (
+data class LikeProductEntity(
     @PrimaryKey
     val productId: String,
     val productName: String,
@@ -23,9 +23,22 @@ data class LikeProductEntity (
     val isFreeShipping: Boolean,
     val isLike: Boolean
 )
-
 fun LikeProductEntity.toDomainModel() : Product {
     return Product(
+        productId = productId,
+        productName = productName,
+        imageUrl = imageUrl,
+        price = price,
+        category = category,
+        shop = shop,
+        isNew = isNew,
+        isFreeShipping = isFreeShipping,
+        isLike = isLike
+    )
+}
+
+fun Product.toLikeProductEntity() : LikeProductEntity {
+    return LikeProductEntity(
         productId = productId,
         productName = productName,
         imageUrl = imageUrl,

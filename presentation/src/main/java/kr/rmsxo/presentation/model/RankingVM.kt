@@ -13,6 +13,10 @@ class RankingVM(model: Ranking, private val productDelegate: ProductDelegate) :
         sendRankingLog()
     }
 
+    fun likeProduct(product: Product) {
+        productDelegate.likeProduct(product)
+    }
+
     private fun sendRankingLog() {
 
     }

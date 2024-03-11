@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.gson.Gson
 import kr.rmsxo.domain.model.Category
 import kr.rmsxo.presentation.ui.category.CategoryScreen
+import kr.rmsxo.presentation.ui.main.LikeScreen
 import kr.rmsxo.presentation.ui.main.MainCategoryScreen
 import kr.rmsxo.presentation.ui.main.MainHomeScreen
 import kr.rmsxo.presentation.ui.main.MyPageScreen
@@ -46,9 +47,9 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
 
     Scaffold(
         topBar = {
-           if(NavigationItem.MainNav.isMainRoute(currentRoute)) {
-               MainHeader(viewModel, navController)
-           }
+            if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
+                MainHeader(viewModel, navController)
+            }
         },
         scaffoldState = scaffoldState,
         bottomBar = {
@@ -57,7 +58,11 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
             }
         }
     ) {
-        MainNavigationScreen(viewMode = viewModel, navController = navController, googleSignInClient)
+        MainNavigationScreen(
+            viewMode = viewModel,
+            navController = navController,
+            googleSignInClient
+        )
     }
 
 }
@@ -81,6 +86,7 @@ fun MainBottomNavigationBar(navController: NavHostController, currentRoute: Stri
     val bottomNavigationItems = listOf(
         NavigationItem.MainNav.Home,
         NavigationItem.MainNav.Category,
+        NavigationItem.MainNav.LIKE,
         NavigationItem.MainNav.MyPage
     )
     BottomNavigation(
@@ -116,7 +122,11 @@ fun MainBottomNavigationBar(navController: NavHostController, currentRoute: Stri
 }
 
 @Composable
-fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostController, googleSignInClient: GoogleSignInClient) {
+fun MainNavigationScreen(
+    viewMode: MainViewModel,
+    navController: NavHostController,
+    googleSignInClient: GoogleSignInClient
+) {
     NavHost(navController = navController, startDestination = NavigationRouteName.MAIN_HOME) {
         composable(NavigationRouteName.MAIN_HOME) {
             MainHomeScreen(navController, viewMode)
@@ -126,6 +136,9 @@ fun MainNavigationScreen(viewMode: MainViewModel, navController: NavHostControll
         }
         composable(NavigationRouteName.MAIN_MY_PAGE) {
             MyPageScreen(viewModel = viewMode, googleSignInClient = googleSignInClient)
+        }
+        composable(NavigationRouteName.MAIN_LIKE) {
+            LikeScreen(navHostController = navController, viewModel = viewMode)
         }
         composable(
             NavigationRouteName.CATEGORY + "{/category}",
