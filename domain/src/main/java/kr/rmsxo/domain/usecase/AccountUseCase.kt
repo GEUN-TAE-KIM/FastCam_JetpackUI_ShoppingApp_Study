@@ -14,10 +14,10 @@ class AccountUseCase @Inject constructor(
     }
 
     suspend fun signIn(accountInfo: AccountInfo) {
-        accountRepository.signInGoogle(accountInfo)
+        accountRepository.signIn(accountInfo)
     }
 
     suspend fun signOut() {
-        accountRepository.signOutGoogle()
+        accountRepository.signOut()
     }
 }
