@@ -5,4 +5,6 @@ import kr.rmsxo.domain.model.Product
 
 interface ProductDetailRepository {
     fun getProductDetail(productId: String) : Flow<Product>
+
+    suspend fun addBasket(product: Product)
 }
