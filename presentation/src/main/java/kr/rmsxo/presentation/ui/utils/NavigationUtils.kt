@@ -1,42 +1,46 @@
 package kr.rmsxo.presentation.ui.utils
 
-import android.net.Uri
-import android.os.Parcelable
 import androidx.navigation.NavHostController
-import com.google.gson.Gson
-import kr.rmsxo.domain.model.Category
-import kr.rmsxo.domain.model.Product
+import kr.rmsxo.presentation.ui.BasketNav
+import kr.rmsxo.presentation.ui.CategoryNav
+import kr.rmsxo.presentation.ui.Destination
+import kr.rmsxo.presentation.ui.MainNav
+import kr.rmsxo.presentation.ui.NavigationRouteName
+import kr.rmsxo.presentation.ui.ProductDetailNav
+import kr.rmsxo.presentation.ui.PurchaseHistoryNav
+import kr.rmsxo.presentation.ui.SearchNav
 
 object NavigationUtils {
 
-    fun navigation(
+    fun navigate(
         controller: NavHostController,
         routeName: String,
-        args: Any? = null,
-        backStackRouteName: String? = null,
-        isLaunchSingleTop: Boolean = true,
-        needToRestoreState: Boolean = true
+        backStackRouteName: String? =null,
+        isLaunchSingleTop: Boolean= true,
+        needToRestoreState: Boolean= true
     ) {
-        var argument = ""
-        if (args != null) {
-            when(args) {
-                is Parcelable -> {
-                    argument = String.format("/%s", Uri.parse(Gson().toJson(args)))
-                }
-                is Category -> {
-                    argument = String.format("/%s", Uri.parse(Gson().toJson(args)))
-                }
-                is Product -> {
-                    argument = String.format("/%s", args.productId)
-                }
-            }
-        }
-        controller.navigate("$routeName$argument") {
-            if (backStackRouteName != null) {
-                popUpTo(backStackRouteName) { saveState = true }
+        controller.navigate(routeName) {
+            if(backStackRouteName != null) {
+                popUpTo(backStackRouteName) { saveState = true}
             }
             launchSingleTop = isLaunchSingleTop
             restoreState = needToRestoreState
+        }
+    }
+
+    fun findDestination(route : String?) : Destination {
+        return when(route) {
+            NavigationRouteName.MAIN_MY_PAGE -> MainNav.MyPage
+            NavigationRouteName.MAIN_LIKE -> MainNav.Like
+            NavigationRouteName.MAIN_HOME -> MainNav.Home
+            NavigationRouteName.MAIN_CATEGORY -> MainNav.Category
+            NavigationRouteName.SEARCH -> SearchNav
+            NavigationRouteName.BASKET -> BasketNav
+            NavigationRouteName.PURCHASE_HISTORY -> PurchaseHistoryNav
+
+            ProductDetailNav.routeWithArgName() -> ProductDetailNav
+            CategoryNav.routeWithArgName() -> CategoryNav
+            else -> MainNav.Home
         }
     }
 }

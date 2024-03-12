@@ -19,7 +19,8 @@ import kr.rmsxo.data.db.entity.SearchKeywordEntity
         SearchKeywordEntity::class,
       //  PurchaseHistoryEntity::class,
     ],
-    version = 3
+    version = 3,
+    exportSchema = true
 )
 abstract class ApplicationDatabase : RoomDatabase() {
     companion object {
