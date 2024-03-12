@@ -55,7 +55,10 @@ class MainViewModel @Inject constructor(
 
     fun openSearchForm(navHostController: NavHostController) {
         NavigationUtils.navigation(navHostController, NavigationRouteName.SEARCH)
+    }
 
+    fun openBasket(navHostController: NavHostController) {
+        NavigationUtils.navigation(navHostController, NavigationRouteName.BASKET)
     }
 
     fun signIn(accountInfo: AccountInfo) {

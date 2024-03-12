@@ -1,10 +1,12 @@
 package kr.rmsxo.presentation.viewmodel.product_datail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.usecase.ProductDetailUseCase
 import javax.inject.Inject
@@ -23,7 +25,11 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    fun addBasket(productId: String) {
+    fun addBasket(product: Product?) {
+        product ?: return
 
+        viewModelScope.launch {
+            useCase.addBasket(product)
+        }
     }
 }
