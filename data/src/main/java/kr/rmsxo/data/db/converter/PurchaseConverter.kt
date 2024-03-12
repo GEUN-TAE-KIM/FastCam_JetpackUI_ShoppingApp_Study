@@ -11,7 +11,7 @@ class PurchaseConverter {
     private val gson = GsonBuilder().create()
 
     @TypeConverter
-    fun fromPrice(value: Price): String {
+    fun fromPrice(value: Price) : String {
         return gson.toJson(value)
     }
 
