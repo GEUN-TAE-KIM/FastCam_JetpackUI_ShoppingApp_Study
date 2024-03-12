@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -35,7 +36,7 @@ import kr.rmsxo.domain.model.AccountInfo
 import kr.rmsxo.presentation.viewmodel.MainViewModel
 
 @Composable
-fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClient) {
+fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClient, navHostController: NavHostController) {
 
     val accountInfo by viewModel.accountInfo.collectAsState()
     val firebaseAuth by lazy { FirebaseAuth.getInstance() }

@@ -16,6 +16,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -42,7 +43,7 @@ import kr.rmsxo.presentation.viewmodel.basket.BasketAction
 import kr.rmsxo.presentation.viewmodel.basket.BasketViewModel
 
 @Composable
-fun BasketScreen(viewModel: BasketViewModel = hiltViewModel()) {
+fun BasketScreen(scaffoldState: ScaffoldState, viewModel: BasketViewModel = hiltViewModel()) {
 
     val basketProducts by viewModel.basketProducts.collectAsState(initial = listOf())
 

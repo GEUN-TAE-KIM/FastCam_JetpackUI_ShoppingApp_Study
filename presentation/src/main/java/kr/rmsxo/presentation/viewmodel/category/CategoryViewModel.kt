@@ -13,6 +13,7 @@ import kr.rmsxo.domain.usecase.CategoryUseCase
 import kr.rmsxo.presentation.delegate.ProductDelegate
 import kr.rmsxo.presentation.model.ProductVM
 import kr.rmsxo.presentation.ui.NavigationRouteName
+import kr.rmsxo.presentation.ui.ProductDetailNav
 import kr.rmsxo.presentation.ui.utils.NavigationUtils
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     override fun openProduct(navHostController: NavHostController, product: Product) {
-        NavigationUtils.navigation(navHostController, NavigationRouteName.PRODUCT_DETAIL, product)
+        NavigationUtils.navigate(navHostController, ProductDetailNav.navigateWithArg(product.productId))
     }
 
     override fun likeProduct(product: Product) {

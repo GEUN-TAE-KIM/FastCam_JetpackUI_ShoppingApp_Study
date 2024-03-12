@@ -1,6 +1,5 @@
 package kr.rmsxo.presentation.viewmodel
 
-import android.app.Presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -15,7 +14,6 @@ import kr.rmsxo.domain.model.BannerList
 import kr.rmsxo.domain.model.BaseModel
 import kr.rmsxo.domain.model.Carousel
 import kr.rmsxo.domain.model.Category
-import kr.rmsxo.domain.model.ModelType
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.domain.model.Ranking
 import kr.rmsxo.domain.usecase.AccountUseCase
@@ -31,7 +29,11 @@ import kr.rmsxo.presentation.model.CarouselVM
 import kr.rmsxo.presentation.model.PresentationVM
 import kr.rmsxo.presentation.model.ProductVM
 import kr.rmsxo.presentation.model.RankingVM
+import kr.rmsxo.presentation.ui.BasketNav
+import kr.rmsxo.presentation.ui.CategoryNav
 import kr.rmsxo.presentation.ui.NavigationRouteName
+import kr.rmsxo.presentation.ui.ProductDetailNav
+import kr.rmsxo.presentation.ui.SearchNav
 import kr.rmsxo.presentation.ui.utils.NavigationUtils
 import javax.inject.Inject
 
@@ -54,11 +56,11 @@ class MainViewModel @Inject constructor(
     val likeProducts = likeUseCase.getLikeProduct().map(::convertToPresentationVM)
 
     fun openSearchForm(navHostController: NavHostController) {
-        NavigationUtils.navigation(navHostController, NavigationRouteName.SEARCH)
+        NavigationUtils.navigate(navHostController, SearchNav.route)
     }
 
     fun openBasket(navHostController: NavHostController) {
-        NavigationUtils.navigation(navHostController, NavigationRouteName.BASKET)
+        NavigationUtils.navigate(navHostController, BasketNav.route)
     }
 
     fun signIn(accountInfo: AccountInfo) {
@@ -86,8 +88,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openProduct(navHostController: NavHostController, product: Product) {
-        NavigationUtils.navigation(navHostController,NavigationRouteName.PRODUCT_DETAIL, product)
-
+        NavigationUtils.navigate(navHostController, ProductDetailNav.navigateWithArg(product.productId))
     }
 
     override fun openBanner(bannerId: String) {
@@ -95,7 +96,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openCategory(navHostController: NavHostController, category: Category) {
-        NavigationUtils.navigation(navHostController, NavigationRouteName.CATEGORY, category)
+        NavigationUtils.navigate(navHostController, CategoryNav.navigateWithArg(category))
     }
 
     private fun convertToPresentationVM(list: List<BaseModel>): List<PresentationVM<out BaseModel>> {
