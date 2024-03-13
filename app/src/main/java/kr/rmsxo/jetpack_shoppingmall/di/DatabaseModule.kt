@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import kr.rmsxo.data.db.ApplicationDatabase
 import kr.rmsxo.data.db.dao.BasketDao
 import kr.rmsxo.data.db.dao.LikeDao
+import kr.rmsxo.data.db.dao.PurchaseHistoryDao
 import kr.rmsxo.data.db.dao.SearchDao
 import javax.inject.Singleton
 
@@ -48,9 +49,9 @@ object DatabaseModule {
         return database.basketDao()
     }
 
-   /* @Provides
+    @Provides
     @Singleton
     fun providePurchaseHistoryDao(database: ApplicationDatabase): PurchaseHistoryDao {
         return database.purchaseHistoryDao()
-    }*/
+    }
 }
