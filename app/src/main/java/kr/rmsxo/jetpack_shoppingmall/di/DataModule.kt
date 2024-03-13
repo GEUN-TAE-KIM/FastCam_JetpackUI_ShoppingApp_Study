@@ -10,6 +10,7 @@ import kr.rmsxo.data.repository.CategoryRepositoryImpl
 import kr.rmsxo.data.repository.LikeRepositoryImpl
 import kr.rmsxo.data.repository.MainRepositoryImpl
 import kr.rmsxo.data.repository.ProductDetailRepositoryImpl
+import kr.rmsxo.data.repository.PurchaseHistoryRepositoryImpl
 import kr.rmsxo.data.repository.SearchRepositoryImpl
 import kr.rmsxo.data.repository.TempRepositoryImpl
 import kr.rmsxo.domain.repository.AccountRepository
@@ -18,6 +19,7 @@ import kr.rmsxo.domain.repository.CategoryRepository
 import kr.rmsxo.domain.repository.LikeRepository
 import kr.rmsxo.domain.repository.MainRepository
 import kr.rmsxo.domain.repository.ProductDetailRepository
+import kr.rmsxo.domain.repository.PurchaseHistoryRepository
 import kr.rmsxo.domain.repository.SearchRepository
 import kr.rmsxo.domain.repository.TempRepository
 import javax.inject.Singleton
@@ -57,4 +59,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindBasketRepository(basketRepositoryImpl: BasketRepositoryImpl): BasketRepository
+
+    @Binds
+    @Singleton
+    fun bindPurchaseHistoryRepository(purchaseHistoryRepositoryImpl: PurchaseHistoryRepositoryImpl): PurchaseHistoryRepository
 }

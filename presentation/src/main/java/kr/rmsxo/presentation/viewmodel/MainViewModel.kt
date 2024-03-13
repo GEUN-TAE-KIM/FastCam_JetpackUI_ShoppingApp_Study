@@ -33,6 +33,7 @@ import kr.rmsxo.presentation.ui.BasketNav
 import kr.rmsxo.presentation.ui.CategoryNav
 import kr.rmsxo.presentation.ui.NavigationRouteName
 import kr.rmsxo.presentation.ui.ProductDetailNav
+import kr.rmsxo.presentation.ui.PurchaseHistoryNav
 import kr.rmsxo.presentation.ui.SearchNav
 import kr.rmsxo.presentation.ui.utils.NavigationUtils
 import javax.inject.Inject
@@ -44,16 +45,12 @@ class MainViewModel @Inject constructor(
     private val accountUseCase: AccountUseCase,
     likeUseCase: LikeUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
-
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
     val columnCount: StateFlow<Int> = _columnCount
-
     val modelList = mainUseCase.getModelList().map(::convertToPresentationVM)
     val categories = categoryUseCase.getCategories()
-
-    val accountInfo = accountUseCase.getAccountInfo()
-
     val likeProducts = likeUseCase.getLikeProduct().map(::convertToPresentationVM)
+    val accountInfo = accountUseCase.getAccountInfo()
 
     fun openSearchForm(navHostController: NavHostController) {
         NavigationUtils.navigate(navHostController, SearchNav.route)
@@ -61,6 +58,10 @@ class MainViewModel @Inject constructor(
 
     fun openBasket(navHostController: NavHostController) {
         NavigationUtils.navigate(navHostController, BasketNav.route)
+    }
+
+    fun openPurchaseHistory(navHostController: NavHostController) {
+        NavigationUtils.navigate(navHostController, PurchaseHistoryNav.route)
     }
 
     fun signIn(accountInfo: AccountInfo) {
@@ -110,7 +111,6 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
 
     companion object {
         private const val DEFAULT_COLUMN_COUNT = 2

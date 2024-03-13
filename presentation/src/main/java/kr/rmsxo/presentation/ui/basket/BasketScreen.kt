@@ -22,8 +22,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,20 +35,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kr.rmsxo.domain.model.BasketProduct
 import kr.rmsxo.domain.model.Product
 import kr.rmsxo.presentation.R
 import kr.rmsxo.presentation.ui.component.Price
+import kr.rmsxo.presentation.ui.popupSnackBar
 import kr.rmsxo.presentation.ui.theme.Purple200
 import kr.rmsxo.presentation.ui.utils.NumberUtils
 import kr.rmsxo.presentation.viewmodel.basket.BasketAction
+import kr.rmsxo.presentation.viewmodel.basket.BasketEvent
 import kr.rmsxo.presentation.viewmodel.basket.BasketViewModel
 
 @Composable
-fun BasketScreen(scaffoldState: ScaffoldState, viewModel: BasketViewModel = hiltViewModel()) {
-
+fun BasketScreen(
+    scaffoldState: ScaffoldState,
+    viewModel: BasketViewModel = hiltViewModel()
+) {
     val basketProducts by viewModel.basketProducts.collectAsState(initial = listOf())
-
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is BasketEvent.ShowSnackBar -> {
+                    popupSnackBar(scope, scaffoldState, "결제 되었습니다.")
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,9 +100,7 @@ fun BasketScreen(scaffoldState: ScaffoldState, viewModel: BasketViewModel = hilt
                 text = "${getTotalPrice(basketProducts)} 결제하기."
             )
         }
-
     }
-
 }
 
 @Composable
