@@ -7,7 +7,7 @@ import kr.rmsxo.domain.model.SearchKeyword
 
 interface SearchRepository {
 
-    suspend fun search(searchKeyword: SearchKeyword, filters: List<SearchFilter>) : Flow<List<Product>>
+    suspend fun search(searchKeyword: SearchKeyword) : Flow<List<Product>>
 
     fun getSearchKeywords() : Flow<List<SearchKeyword>>
 
